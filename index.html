@@ -1,0 +1,233 @@
+<!-- HTML Page Start -->
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+    <!-- Head Start-->
+
+<head>
+
+    <meta charset="UTF-8">
+    
+    <link rel="shortcut icon" href="./assets/img/img 0.png">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta name="description" content="Notes " />
+
+    <meta name="author" content="Vigneshwaranbh" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Font Awesome CSS -->
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
+    <!-- Main CSS -->
+
+    <link rel="stylesheet" href="./assets/css/style.css">
+  
+    <title>Notes</title>
+
+</head>
+
+    <!-- Head End -->
+
+    <!-- Body Start -->
+
+<body>
+
+  <button class="add" id="add">
+
+    <i class="fas fa-plus-circle"></i><b> Add Note</b>
+
+  </button>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/1.2.2/marked.min.js"></script>
+
+</body>
+
+    <!-- Body End -->
+
+    <!-- Notes JS Start -->
+
+<script>
+
+const addBtn = document.getElementById("add");
+
+const notes = JSON.parse(localStorage.getItem("notes"));
+
+if (notes) {
+
+  notes.forEach((note) => addNewNote(note));
+
+}
+
+addBtn.addEventListener("click", () => addNewNote());
+
+function addNewNote(text = "") {
+
+  const note = document.createElement("div");
+
+  note.classList.add("note");
+
+  note.innerHTML = `
+
+    <div class="tools">
+
+        <button class="edit"><i class="fas fa-edit"></i></button>
+
+        <button class="delete"><i class="fas fa-trash-alt"></i></button>
+
+    </div>
+
+    <div class="main ${text ? "" : "hidden"}"></div>
+
+    <textarea class="${text ? "hidden" : ""}"></textarea>
+
+    `;
+
+  const editBtn = note.querySelector(".edit");
+
+  const deleteBtn = note.querySelector(".delete");
+
+  const main = note.querySelector(".main");
+
+  const textArea = note.querySelector("textarea");
+
+  textArea.value = text;
+
+  main.innerHTML = marked(text);
+
+  deleteBtn.addEventListener("click", () => {
+
+    note.remove();
+
+    updateLS();
+
+  });
+
+  editBtn.addEventListener("click", () => {
+
+    main.classList.toggle("hidden");
+
+    textArea.classList.toggle("hidden");
+
+  });
+
+  textArea.addEventListener("input", (e) => {
+
+    const { value } = e.target;
+
+    main.innerHTML = marked(value);
+
+    updateLS();
+
+  });
+
+  document.body.appendChild(note);
+
+}
+
+function updateLS() {
+
+  const notesText = document.querySelectorAll("textarea");
+  
+  const notes = [];
+
+  notesText.forEach((note) => notes.push(note.value));
+
+  localStorage.setItem("notes", JSON.stringify(notes));
+
+}
+
+</script>
+
+    <!-- Notes JS End -->
+
+    <!-- Lock JS Start -->
+
+<script>
+
+window.onload = function() {
+
+  document.addEventListener("contextmenu", function(e){
+
+    e.preventDefault();
+
+  }, false);
+
+  document.addEventListener("keydown", function(e) {
+    
+  if (e.ctrlKey && e.shiftKey && e.keyCode == 73) {
+
+      disabledEvent(e);
+
+    }
+    
+    if (e.ctrlKey && e.shiftKey && e.keyCode == 74) {
+
+      disabledEvent(e);
+
+    }
+    
+    if (e.ctrlKey && e.keyCode == 85) {
+
+      disabledEvent(e);
+
+    }
+
+    if (e.ctrlKey && e.keyCode == 88) {
+
+      disabledEvent(e);
+
+    }
+
+    if (e.ctrlKey && e.keyCode == 67) {
+
+      disabledEvent(e);
+
+    }
+
+    if (e.ctrlKey && e.keyCode == 80) {
+
+      disabledEvent(e);
+
+    }
+    
+    if (event.keyCode == 123) {
+
+      disabledEvent(e);
+      
+    }
+
+  }, false);
+
+  function disabledEvent(e){
+
+    if (e.stopPropagation){
+
+      e.stopPropagation();
+
+    } else if (window.event){
+
+      window.event.cancelBubble = true;
+
+    }
+
+    e.preventDefault();
+
+    return false;
+
+  }
+
+};
+
+    </script>
+
+    <!-- Lock JS End -->
+
+</html>
+
+    <!-- HTML Page End -->
